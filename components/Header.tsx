@@ -1,6 +1,7 @@
 'use client';
 
-import { RefreshCw, Radio } from 'lucide-react';
+import { RefreshCw, Radio, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface HeaderProps {
     lastUpdated: string | null;
@@ -9,6 +10,18 @@ interface HeaderProps {
 }
 
 export default function Header({ lastUpdated, isLoading, onRefresh }: HeaderProps) {
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            router.push('/login');
+            router.refresh();
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
+
     const formatLastUpdated = (timestamp: string) => {
         const date = new Date(timestamp);
         const now = new Date();
@@ -69,6 +82,21 @@ export default function Header({ lastUpdated, isLoading, onRefresh }: HeaderProp
                             </button>
                         </div>
                     )}
+
+                    {/* Logout button */}
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg 
+                                   bg-base-elevated border border-border-subtle
+                                   hover:border-status-error/50 hover:bg-status-error/5
+                                   transition-all duration-150 group"
+                        title="Logout"
+                    >
+                        <LogOut className="w-3.5 h-3.5 text-content-secondary group-hover:text-status-error transition-colors" />
+                        <span className="text-xs text-content-secondary group-hover:text-status-error transition-colors hidden sm:inline">
+                            Logout
+                        </span>
+                    </button>
                 </div>
             </div>
 

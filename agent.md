@@ -12,6 +12,25 @@ Mission Control provides a centralized view of your OpenClaw system health, incl
 - Running agents/sub-sessions
 - Recent error logs
 
+## Authentication
+
+The dashboard is protected by simple password authentication. 
+
+**Default Password:** `mission-control-2024`
+
+To change the password, set the `MISSION_CONTROL_PASSWORD` environment variable:
+
+```bash
+# In .env.local
+MISSION_CONTROL_PASSWORD=your-secure-password
+```
+
+**Features:**
+- Cookie-based session (7 days)
+- Protected API routes
+- Login page with password field
+- Logout button in header
+
 ## Tech Stack
 
 | Technology | Version | Purpose |
@@ -29,6 +48,8 @@ mission-control/
 │   ├── layout.tsx                # Root layout with dark theme
 │   ├── page.tsx                  # Main dashboard page (client component)
 │   ├── globals.css               # Global styles, animations, scrollbar
+│   ├── login/
+│   │   └── page.tsx              # Login page
 │   └── api/                      # API Routes
 │       ├── system-status/
 │       │   └── route.ts          # GET: Gateway, QMD, sessions status
@@ -38,16 +59,37 @@ mission-control/
 │       │   └── route.ts          # GET: Error logs from last 24h
 │       ├── active-agents/
 │       │   └── route.ts          # GET: Running sub-sessions
-│       └── action/
-│           └── route.ts          # POST: Execute quick actions
+│       ├── action/
+│       │   └── route.ts          # POST: Execute quick actions
+│       └── auth/
+│           ├── login/route.ts    # POST: Authenticate with password
+│           ├── logout/route.ts   # POST: Clear auth session
+│           └── check/route.ts    # GET: Check auth status
 │
 ├── components/                   # React Components
-│   ├── Header.tsx                # Title, subtitle, refresh button
+│   ├── Header.tsx                # Title, subtitle, refresh, logout
 │   ├── StatusCard.tsx            # Reusable status card with icon
 │   ├── RunningAgents.tsx         # Active agents list panel
 │   ├── CronResults.tsx           # Recent cron runs panel
 │   ├── RecentErrors.tsx          # Error log panel
 │   └── QuickActions.tsx          # Action buttons grid
+│
+├── lib/                          # Utilities
+│   ├── types.ts                  # TypeScript interfaces
+│   ├── cli.ts                    # CLI execution & output parsing
+│   └── auth.ts                   # Authentication utilities
+│
+├── middleware.ts                 # Route protection middleware
+├── plans/                        # Architecture documentation
+│   └── mission-control-architecture.md
+│
+├── package.json                  # Dependencies
+├── tailwind.config.ts            # Tailwind configuration
+├── tsconfig.json                 # TypeScript configuration
+├── next.config.ts                # Next.js configuration
+├── postcss.config.mjs            # PostCSS configuration
+└── next-env.d.ts                 # Next.js type declarations
+```
 │
 ├── lib/                          # Utilities
 │   ├── types.ts                  # TypeScript interfaces
