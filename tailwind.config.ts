@@ -6,75 +6,60 @@ export default {
         "./components/**/*.{js,ts,jsx,tsx,mdx}",
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
+    darkMode: "class",
     theme: {
         extend: {
             colors: {
-                // Base palette - Dark Mode
+                // Base palette - using CSS variables for theme switching
                 base: {
-                    DEFAULT: "#09090b",
-                    elevated: "#18181b",
-                    surface: "#27272a",
-                    muted: "#3f3f46",
+                    DEFAULT: "var(--base)",
+                    elevated: "var(--base-elevated)",
+                    surface: "var(--base-surface)",
+                    muted: "var(--base-muted)",
                 },
                 // Text colors
                 content: {
-                    primary: "#fafafa",
-                    secondary: "#a1a1aa",
-                    muted: "#71717a",
-                    accent: "#a78bfa",
+                    primary: "var(--content-primary)",
+                    secondary: "var(--content-secondary)",
+                    muted: "var(--content-muted)",
                 },
                 // Status colors
                 status: {
-                    online: "#4ade80",
-                    warning: "#fbbf24",
-                    error: "#f87171",
-                    info: "#60a5fa",
+                    online: "var(--status-online)",
+                    warning: "var(--status-warning)",
+                    error: "var(--status-error)",
+                    info: "#3b82f6",
                 },
                 // Accent colors
                 accent: {
-                    purple: "#a78bfa",
-                    cyan: "#22d3ee",
-                    pink: "#f472b6",
+                    purple: "#8b5cf6",
+                    cyan: "#06b6d4",
+                    pink: "#ec4899",
                 },
                 // Border colors
                 border: {
-                    subtle: "#27272a",
-                    DEFAULT: "#3f3f46",
-                    emphasis: "#52525b",
+                    subtle: "var(--border-subtle)",
+                    DEFAULT: "var(--border-default)",
+                    emphasis: "var(--border-emphasis)",
                 },
             },
             fontFamily: {
-                mono: ["JetBrains Mono", "Fira Code", "SF Mono", "monospace"],
-                sans: ["Inter", "-apple-system", "Segoe UI", "sans-serif"],
+                sans: ['Inter', '-apple-system', 'Segoe UI', 'sans-serif'],
+                mono: ['JetBrains Mono', 'Menlo', 'monospace'],
+            },
+            fontSize: {
+                '2xs': ['0.625rem', { lineHeight: '0.75rem' }],
             },
             animation: {
-                "pulse-slow": "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                "spin-slow": "spin 1s linear infinite",
-                "fade-in": "fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-                "slide-up": "slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-                "status-pulse": "statusPulse 2s ease-in-out infinite",
-            },
-            keyframes: {
-                fadeIn: {
-                    "0%": { opacity: "0", transform: "translateY(10px)" },
-                    "100%": { opacity: "1", transform: "translateY(0)" },
-                },
-                slideUp: {
-                    "0%": { opacity: "0", transform: "translateY(20px)" },
-                    "100%": { opacity: "1", transform: "translateY(0)" },
-                },
-                statusPulse: {
-                    "0%, 100%": { opacity: "1" },
-                    "50%": { opacity: "0.5" },
-                },
+                'spin-slow': 'spin 3s linear infinite',
+                'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
             },
             boxShadow: {
-                glow: "0 0 20px rgba(167, 139, 250, 0.15)",
-                "glow-green": "0 0 8px rgba(74, 222, 128, 0.8)",
-                "glow-yellow": "0 0 8px rgba(251, 191, 36, 0.8)",
-                "glow-red": "0 0 8px rgba(248, 113, 113, 0.8)",
+                'glow-purple': '0 0 20px rgba(139, 92, 246, 0.3)',
+                'glow-cyan': '0 0 20px rgba(6, 182, 212, 0.3)',
+                'glow-pink': '0 0 20px rgba(236, 72, 153, 0.3)',
             },
         },
     },
     plugins: [],
-} satisfies Config;
+};

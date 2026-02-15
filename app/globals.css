@@ -2,15 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* Dark mode (default) */
+:root,
+html.dark {
     --background: #09090b;
     --foreground: #fafafa;
+    --base: #09090b;
+    --base-elevated: #18181b;
+    --base-surface: #27272a;
+    --base-muted: #3f3f46;
+    --content-primary: #fafafa;
+    --content-secondary: #a1a1aa;
+    --content-muted: #71717a;
+    --border-subtle: #27272a;
+    --border-default: #3f3f46;
+    --border-emphasis: #52525b;
+    --grid-color: rgba(167, 139, 250, 0.03);
+    --card-shadow: rgba(0, 0, 0, 0.4);
+    --glow-purple: rgba(139, 92, 246, 0.15);
+    --glow-cyan: rgba(6, 182, 212, 0.15);
+    --glow-pink: rgba(236, 72, 153, 0.15);
+    --shimmer-color: rgba(167, 139, 250, 0.3);
+    --status-online: #22c55e;
+    --status-warning: #f59e0b;
+    --status-error: #ef4444;
+}
+
+/* Light mode */
+html.light,
+.light {
+    --background: #fafafa;
+    --foreground: #18181b;
+    --base: #fafafa;
+    --base-elevated: #ffffff;
+    --base-surface: #f4f4f5;
+    --base-muted: #e4e4e7;
+    --content-primary: #18181b;
+    --content-secondary: #52525b;
+    --content-muted: #a1a1aa;
+    --border-subtle: #e4e4e7;
+    --border-default: #d4d4d8;
+    --border-emphasis: #a1a1aa;
+    --grid-color: rgba(139, 92, 246, 0.04);
+    --card-shadow: rgba(0, 0, 0, 0.08);
+    --glow-purple: rgba(139, 92, 246, 0.1);
+    --glow-cyan: rgba(6, 182, 212, 0.1);
+    --glow-pink: rgba(236, 72, 153, 0.1);
+    --shimmer-color: rgba(139, 92, 246, 0.2);
+    --status-online: #16a34a;
+    --status-warning: #d97706;
+    --status-error: #dc2626;
 }
 
 body {
     color: var(--foreground);
     background: var(--background);
     font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Subtle grid background pattern */
@@ -22,11 +70,12 @@ body::before {
     right: 0;
     bottom: 0;
     background-image:
-        linear-gradient(rgba(167, 139, 250, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(167, 139, 250, 0.03) 1px, transparent 1px);
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
     background-size: 50px 50px;
     pointer-events: none;
     z-index: -1;
+    transition: background-image 0.3s ease;
 }
 
 /* Custom scrollbar */
@@ -40,12 +89,12 @@ body::before {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #3f3f46;
+    background: var(--border-default);
     border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #52525b;
+    background: var(--border-emphasis);
 }
 
 /* Loading skeleton animation */
@@ -61,9 +110,9 @@ body::before {
 
 .skeleton {
     background: linear-gradient(90deg,
-            #27272a 25%,
-            #3f3f46 50%,
-            #27272a 75%);
+            var(--base-surface) 25%,
+            var(--base-muted) 50%,
+            var(--base-surface) 75%);
     background-size: 200% 100%;
     animation: skeleton-loading 1.5s infinite;
     border-radius: 4px;
@@ -71,15 +120,15 @@ body::before {
 
 /* Status indicator glow */
 .status-glow-green {
-    box-shadow: 0 0 8px rgba(74, 222, 128, 0.8);
+    box-shadow: 0 0 8px var(--status-online);
 }
 
 .status-glow-yellow {
-    box-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
+    box-shadow: 0 0 8px var(--status-warning);
 }
 
 .status-glow-red {
-    box-shadow: 0 0 8px rgba(248, 113, 113, 0.8);
+    box-shadow: 0 0 8px var(--status-error);
 }
 
 /* Card hover effect */
@@ -90,8 +139,8 @@ body::before {
 }
 
 .card-hover:hover {
-    border-color: #3f3f46;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    border-color: var(--border-default);
+    box-shadow: 0 4px 12px var(--card-shadow);
     transform: translateY(-2px);
 }
 
@@ -102,7 +151,7 @@ body::before {
 
 .btn-lift:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 12px var(--card-shadow);
 }
 
 .btn-lift:active {
@@ -168,7 +217,7 @@ body::before {
 
 /* Gradient text */
 .gradient-text {
-    background: linear-gradient(135deg, #a78bfa 0%, #22d3ee 50%, #f472b6 100%);
+    background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 50%, #ec4899 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -197,7 +246,7 @@ body::before {
     padding: 1px;
     background: linear-gradient(90deg,
             transparent 0%,
-            rgba(167, 139, 250, 0.3) 50%,
+            var(--shimmer-color) 50%,
             transparent 100%);
     background-size: 200% 100%;
     animation: shimmer 3s linear infinite;
@@ -228,7 +277,7 @@ body::before {
     opacity: 0;
     transition: opacity 300ms;
     background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-            rgba(167, 139, 250, 0.1),
+            var(--glow-purple),
             transparent 40%);
     pointer-events: none;
 }
@@ -279,7 +328,7 @@ body::before {
 .data-flow {
     background: linear-gradient(90deg,
             transparent 0%,
-            rgba(167, 139, 250, 0.3) 50%,
+            var(--shimmer-color) 50%,
             transparent 100%);
     background-size: 200% 100%;
     animation: dataFlow 2s linear infinite;
@@ -311,7 +360,7 @@ body::before {
 }
 
 /* Fade in animation */
-@keyframes fadeIn {
+@keyframes fadeInUp {
     from {
         opacity: 0;
         transform: translateY(-10px);
@@ -324,14 +373,14 @@ body::before {
 }
 
 .animate-fadeIn {
-    animation: fadeIn 0.3s ease-out forwards;
+    animation: fadeInUp 0.3s ease-out forwards;
 }
 
 /* Gradient border */
 .gradient-border {
     position: relative;
-    background: linear-gradient(#18181b, #18181b) padding-box,
-        linear-gradient(135deg, #a78bfa, #22d3ee, #f472b6) border-box;
+    background: linear-gradient(var(--base-elevated), var(--base-elevated)) padding-box,
+        linear-gradient(135deg, #8b5cf6, #06b6d4, #ec4899) border-box;
     border: 1px solid transparent;
 }
 
@@ -351,15 +400,15 @@ body::before {
 }
 
 .status-accent-line.online::before {
-    background: linear-gradient(180deg, #4ade80, #22c55e);
+    background: linear-gradient(180deg, #22c55e, #16a34a);
 }
 
 .status-accent-line.warning::before {
-    background: linear-gradient(180deg, #fbbf24, #f59e0b);
+    background: linear-gradient(180deg, #f59e0b, #d97706);
 }
 
 .status-accent-line.error::before {
-    background: linear-gradient(180deg, #f87171, #ef4444);
+    background: linear-gradient(180deg, #ef4444, #dc2626);
 }
 
 /* Metric counter animation */
@@ -381,7 +430,7 @@ body::before {
 
 /* Panel header gradient */
 .panel-header-gradient {
-    background: linear-gradient(180deg, rgba(39, 39, 42, 0.5) 0%, transparent 100%);
+    background: linear-gradient(180deg, var(--base-surface) 0%, transparent 100%);
 }
 
 /* Icon container */
@@ -425,7 +474,79 @@ body::before {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #4ade80;
+    background: var(--status-online);
     animation: livePulse 1.5s ease-in-out infinite;
-    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    box-shadow: 0 0 8px var(--status-online);
+}
+
+/* Theme toggle animation */
+@keyframes themeToggle {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(180deg) scale(0.8);
+    }
+
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+.theme-toggle-animate {
+    animation: themeToggle 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Light mode specific adjustments */
+.light .status-glow-green {
+    box-shadow: 0 0 12px rgba(22, 163, 74, 0.5);
+}
+
+.light .status-glow-yellow {
+    box-shadow: 0 0 12px rgba(217, 119, 6, 0.5);
+}
+
+.light .status-glow-red {
+    box-shadow: 0 0 12px rgba(220, 38, 38, 0.5);
+}
+
+/* Light mode card shadows */
+.light .card-hover:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Light mode gradient border */
+.light .gradient-border {
+    background: linear-gradient(var(--base-elevated), var(--base-elevated)) padding-box,
+        linear-gradient(135deg, #8b5cf6, #06b6d4, #ec4899) border-box;
+}
+
+/* Light mode panel header */
+.light .panel-header-gradient {
+    background: linear-gradient(180deg, rgba(244, 244, 245, 0.8) 0%, transparent 100%);
+}
+
+/* Light mode live indicator */
+.light .live-indicator::before {
+    box-shadow: 0 0 8px rgba(22, 163, 74, 0.6);
+}
+
+/* Smooth theme transition for all elements */
+*,
+*::before,
+*::after {
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Exclude animations from transition */
+.animate-fadeIn,
+.status-pulse,
+.shimmer-border::before,
+.float,
+.activity-ring::before,
+.data-flow,
+.live-indicator::before,
+.theme-toggle-animate {
+    transition: none !important;
 }

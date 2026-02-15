@@ -1,7 +1,9 @@
 'use client';
 
-import { RefreshCw, Radio, LogOut } from 'lucide-react';
+import { RefreshCw, Radio, LogOut, Sun, Moon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useTheme } from '@/lib/theme';
+import { useState } from 'react';
 
 interface HeaderProps {
     lastUpdated: string | null;
@@ -11,6 +13,8 @@ interface HeaderProps {
 
 export default function Header({ lastUpdated, isLoading, onRefresh }: HeaderProps) {
     const router = useRouter();
+    const { theme, toggleTheme, isDark } = useTheme();
+    const [isAnimating, setIsAnimating] = useState(false);
 
     const handleLogout = async () => {
         try {
@@ -20,6 +24,12 @@ export default function Header({ lastUpdated, isLoading, onRefresh }: HeaderProp
         } catch (error) {
             console.error('Logout failed:', error);
         }
+    };
+
+    const handleThemeToggle = () => {
+        setIsAnimating(true);
+        toggleTheme();
+        setTimeout(() => setIsAnimating(false), 500);
     };
 
     const formatLastUpdated = (timestamp: string) => {
@@ -43,7 +53,7 @@ export default function Header({ lastUpdated, isLoading, onRefresh }: HeaderProp
                 <div>
                     <div className="flex items-center gap-3">
                         <h1 className="text-2xl font-bold text-content-primary tracking-tight">
-                            <span className="mr-2">🖤</span>
+                            <span className="mr-2">{isDark ? '🖤' : '💜'}</span>
                             Mission Control
                         </h1>
                         <div className="live-indicator text-xs text-status-online font-medium">
@@ -55,7 +65,7 @@ export default function Header({ lastUpdated, isLoading, onRefresh }: HeaderProp
                     </p>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                     {lastUpdated && (
                         <div className="flex items-center gap-3 px-3 py-1.5 rounded-lg 
                            bg-base-elevated border border-border-subtle">
@@ -82,6 +92,22 @@ export default function Header({ lastUpdated, isLoading, onRefresh }: HeaderProp
                             </button>
                         </div>
                     )}
+
+                    {/* Theme toggle button */}
+                    <button
+                        onClick={handleThemeToggle}
+                        className={`flex items-center justify-center w-9 h-9 rounded-lg 
+                                   bg-base-elevated border border-border-subtle
+                                   hover:border-accent-purple/50 hover:bg-accent-purple/5
+                                   transition-all duration-150 group ${isAnimating ? 'theme-toggle-animate' : ''}`}
+                        title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                    >
+                        {isDark ? (
+                            <Sun className="w-4 h-4 text-content-secondary group-hover:text-accent-purple transition-colors" />
+                        ) : (
+                            <Moon className="w-4 h-4 text-content-secondary group-hover:text-accent-purple transition-colors" />
+                        )}
+                    </button>
 
                     {/* Logout button */}
                     <button

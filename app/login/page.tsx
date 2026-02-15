@@ -48,7 +48,7 @@ export default function LoginPage() {
             {/* Animated background */}
             <div className="absolute inset-0 bg-base">
                 {/* Grid pattern */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(167,139,250,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(167,139,250,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+                <div className="absolute inset-0 bg-[linear-gradient(var(--grid-color)_1px,transparent_1px),linear-gradient(90deg,var(--grid-color)_1px,transparent_1px)] bg-[size:50px_50px]" />
 
                 {/* Animated gradient orbs */}
                 <div className="absolute top-1/4 -left-20 w-96 h-96 bg-accent-purple/20 rounded-full blur-[100px] animate-pulse" />
