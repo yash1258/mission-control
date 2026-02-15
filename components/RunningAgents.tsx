@@ -1,6 +1,6 @@
 'use client';
 
-import { Zap } from 'lucide-react';
+import { Zap, Sparkles } from 'lucide-react';
 import type { ActiveAgent } from '@/lib/types';
 
 interface RunningAgentsProps {
@@ -9,9 +9,24 @@ interface RunningAgentsProps {
 }
 
 const statusStyles = {
-    running: { dot: 'bg-status-online', text: 'text-status-online' },
-    idle: { dot: 'bg-content-muted', text: 'text-content-muted' },
-    error: { dot: 'bg-status-error', text: 'text-status-error' },
+    running: {
+        dot: 'bg-status-online',
+        text: 'text-status-online',
+        bg: 'bg-status-online/10',
+        ring: 'activity-ring',
+    },
+    idle: {
+        dot: 'bg-content-muted',
+        text: 'text-content-muted',
+        bg: 'bg-base-surface',
+        ring: '',
+    },
+    error: {
+        dot: 'bg-status-error',
+        text: 'text-status-error',
+        bg: 'bg-status-error/10',
+        ring: '',
+    },
 };
 
 function formatTimeAgo(timestamp: string): string {
@@ -31,21 +46,27 @@ function formatTimeAgo(timestamp: string): string {
 
 export default function RunningAgents({ agents, isLoading }: RunningAgentsProps) {
     return (
-        <div className="bg-base-elevated border border-border-subtle rounded-xl overflow-hidden h-full">
+        <div className="bg-base-elevated border border-border-subtle rounded-xl overflow-hidden h-full shimmer-border">
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-3 
-                      border-b border-border-subtle
-                      bg-gradient-to-b from-base-surface to-transparent">
+                      border-b border-border-subtle panel-header-gradient">
                 <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-content-muted" />
+                    <div className="p-1.5 rounded-lg bg-accent-purple/10">
+                        <Zap className="w-3.5 h-3.5 text-accent-purple" />
+                    </div>
                     <span className="text-sm font-semibold text-content-secondary uppercase tracking-wide">
                         Running Agents
                     </span>
                 </div>
-                <span className="text-xs font-medium px-2 py-0.5 rounded-full 
-                         bg-base-surface text-content-muted">
-                    {agents.length} active
-                </span>
+                <div className="flex items-center gap-2">
+                    {agents.length > 0 && (
+                        <span className="flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full 
+                           bg-accent-purple/10 text-accent-purple">
+                            <Sparkles className="w-3 h-3" />
+                            {agents.length} active
+                        </span>
+                    )}
+                </div>
             </div>
 
             {/* Content */}
@@ -57,8 +78,12 @@ export default function RunningAgents({ agents, isLoading }: RunningAgentsProps)
                         ))}
                     </div>
                 ) : agents.length === 0 ? (
-                    <div className="text-center py-8 text-content-muted text-sm">
-                        No active agents
+                    <div className="flex flex-col items-center justify-center py-8 text-content-muted">
+                        <div className="w-12 h-12 rounded-full bg-base-surface flex items-center justify-center mb-3">
+                            <Zap className="w-5 h-5 text-content-muted" />
+                        </div>
+                        <span className="text-sm">No active agents</span>
+                        <span className="text-xs text-content-muted mt-1">Agents will appear here when running</span>
                     </div>
                 ) : (
                     <div className="space-y-2">
@@ -67,24 +92,31 @@ export default function RunningAgents({ agents, isLoading }: RunningAgentsProps)
                             return (
                                 <div
                                     key={agent.id}
-                                    className="p-3 rounded-lg hover:bg-base-surface 
-                             transition-colors duration-150"
+                                    className="group p-3 rounded-lg hover:bg-base-surface 
+                             transition-all duration-150 border border-transparent 
+                             hover:border-border-subtle"
                                     style={{ animationDelay: `${index * 50}ms` }}
                                 >
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2">
-                                                <span className="font-medium text-content-primary truncate">
+                                                <span className={`w-2 h-2 rounded-full ${styles.dot} ${styles.ring}`}
+                                                    style={{ color: agent.status === 'running' ? '#4ade80' : undefined }} />
+                                                <span className="font-medium text-content-primary truncate group-hover:text-accent-purple transition-colors">
                                                     {agent.label}
                                                 </span>
-                                                <span className={`w-1.5 h-1.5 rounded-full ${styles.dot}`} />
                                             </div>
-                                            <p className="text-sm text-content-secondary truncate mt-0.5">
+                                            <p className="text-sm text-content-secondary truncate mt-1 pl-4">
                                                 {agent.task}
                                             </p>
-                                            <p className="text-xs text-content-muted font-mono mt-1">
-                                                Started {formatTimeAgo(agent.startedAt)}
-                                            </p>
+                                            <div className="flex items-center gap-2 mt-2 pl-4">
+                                                <span className="text-xs text-content-muted font-mono">
+                                                    Started {formatTimeAgo(agent.startedAt)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className={`px-2 py-0.5 rounded text-xs font-medium ${styles.bg} ${styles.text}`}>
+                                            {agent.status}
                                         </div>
                                     </div>
                                 </div>

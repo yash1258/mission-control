@@ -1,6 +1,6 @@
 'use client';
 
-import { Clock } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import type { CronJob } from '@/lib/types';
 
 interface CronResultsProps {
@@ -8,11 +8,35 @@ interface CronResultsProps {
     isLoading?: boolean;
 }
 
-const statusStyles = {
-    ok: { dot: 'bg-status-online', text: 'text-status-online', bg: 'bg-status-online/10' },
-    error: { dot: 'bg-status-error', text: 'text-status-error', bg: 'bg-status-error/10' },
-    running: { dot: 'bg-status-info', text: 'text-status-info', bg: 'bg-status-info/10' },
-    disabled: { dot: 'bg-content-muted', text: 'text-content-muted', bg: 'bg-base-surface' },
+const statusConfig = {
+    ok: {
+        icon: CheckCircle,
+        text: 'text-status-online',
+        bg: 'bg-status-online/10',
+        border: 'border-status-online/20',
+        animate: '',
+    },
+    error: {
+        icon: XCircle,
+        text: 'text-status-error',
+        bg: 'bg-status-error/10',
+        border: 'border-status-error/20',
+        animate: '',
+    },
+    running: {
+        icon: Loader2,
+        text: 'text-status-info',
+        bg: 'bg-status-info/10',
+        border: 'border-status-info/20',
+        animate: 'animate-spin',
+    },
+    disabled: {
+        icon: Clock,
+        text: 'text-content-muted',
+        bg: 'bg-base-surface',
+        border: 'border-border-subtle',
+        animate: '',
+    },
 };
 
 function formatTime(timestamp: string): string {
@@ -43,19 +67,20 @@ export default function CronResults({ jobs, isLoading }: CronResultsProps) {
         .slice(0, 4);
 
     return (
-        <div className="bg-base-elevated border border-border-subtle rounded-xl overflow-hidden h-full">
+        <div className="bg-base-elevated border border-border-subtle rounded-xl overflow-hidden h-full shimmer-border">
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-3 
-                      border-b border-border-subtle
-                      bg-gradient-to-b from-base-surface to-transparent">
+                      border-b border-border-subtle panel-header-gradient">
                 <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-content-muted" />
+                    <div className="p-1.5 rounded-lg bg-accent-cyan/10">
+                        <Clock className="w-3.5 h-3.5 text-accent-cyan" />
+                    </div>
                     <span className="text-sm font-semibold text-content-secondary uppercase tracking-wide">
                         Recent Cron Results
                     </span>
                 </div>
                 <span className="text-xs font-medium px-2 py-0.5 rounded-full 
-                         bg-base-surface text-content-muted">
+                         bg-base-surface text-content-muted border border-border-subtle">
                     {jobs.filter(j => j.enabled).length} jobs
                 </span>
             </div>
@@ -69,40 +94,50 @@ export default function CronResults({ jobs, isLoading }: CronResultsProps) {
                         ))}
                     </div>
                 ) : recentRuns.length === 0 ? (
-                    <div className="text-center py-8 text-content-muted text-sm">
-                        No recent cron runs
+                    <div className="flex flex-col items-center justify-center py-8 text-content-muted">
+                        <div className="w-12 h-12 rounded-full bg-base-surface flex items-center justify-center mb-3">
+                            <Clock className="w-5 h-5 text-content-muted" />
+                        </div>
+                        <span className="text-sm">No recent cron runs</span>
+                        <span className="text-xs text-content-muted mt-1">Runs will appear here when executed</span>
                     </div>
                 ) : (
                     <div className="space-y-2">
                         {recentRuns.map((job, index) => {
-                            const styles = statusStyles[job.status];
+                            const config = statusConfig[job.status];
+                            const StatusIcon = config.icon;
+
                             return (
                                 <div
                                     key={job.id}
-                                    className="p-3 rounded-lg hover:bg-base-surface 
-                             transition-colors duration-150"
+                                    className="group p-3 rounded-lg hover:bg-base-surface 
+                             transition-all duration-150 border border-transparent 
+                             hover:border-border-subtle"
                                     style={{ animationDelay: `${index * 50}ms` }}
                                 >
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex items-center justify-between gap-3">
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2">
-                                                <span className="font-medium text-content-primary truncate">
+                                                <StatusIcon className={`w-4 h-4 ${config.text} ${config.animate}`} />
+                                                <span className="font-medium text-content-primary truncate group-hover:text-accent-cyan transition-colors">
                                                     {job.name}
                                                 </span>
-                                                <span className={`text-xs px-1.5 py-0.5 rounded ${styles.bg} ${styles.text}`}>
-                                                    {job.status}
+                                            </div>
+                                            <div className="flex items-center gap-2 mt-1.5 pl-6">
+                                                <span className="text-xs text-content-muted font-mono">
+                                                    {formatTime(job.lastRun)}
                                                 </span>
                                             </div>
-                                            <p className="text-xs text-content-muted font-mono mt-1">
-                                                {formatTime(job.lastRun)}
-                                            </p>
                                         </div>
-                                        {job.error && (
-                                            <span className="text-xs text-status-error truncate max-w-24 ml-2">
-                                                {job.error}
-                                            </span>
-                                        )}
+                                        <div className={`px-2 py-0.5 rounded text-xs font-medium border ${config.bg} ${config.text} ${config.border}`}>
+                                            {job.status}
+                                        </div>
                                     </div>
+                                    {job.error && (
+                                        <div className="mt-2 pl-6 text-xs text-status-error bg-status-error/5 rounded p-2 font-mono">
+                                            {job.error}
+                                        </div>
+                                    )}
                                 </div>
                             );
                         })}

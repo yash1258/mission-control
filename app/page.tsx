@@ -186,14 +186,22 @@ export default function Dashboard() {
 
             {/* Quick Actions */}
             <section className="mt-8">
-                <h2 className="text-sm font-semibold text-content-muted uppercase tracking-wide mb-4">
-                    Quick Actions
-                </h2>
                 <QuickActions
                     onAction={handleAction}
                     loadingAction={loadingAction}
                 />
             </section>
+
+            {/* Footer */}
+            <footer className="mt-12 pt-6 border-t border-border-subtle">
+                <div className="flex items-center justify-between text-xs text-content-muted">
+                    <span className="font-mono">Mission Control v0.1.0</span>
+                    <span className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-status-online animate-pulse" />
+                        System operational
+                    </span>
+                </div>
+            </footer>
         </main>
     );
 }
