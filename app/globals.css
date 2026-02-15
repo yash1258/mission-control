@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --background: #09090b;
+    --foreground: #fafafa;
+}
+
+body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #52525b;
+}
+
+/* Loading skeleton animation */
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(90deg,
+            #27272a 25%,
+            #3f3f46 50%,
+            #27272a 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Status indicator glow */
+.status-glow-green {
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.8);
+}
+
+.status-glow-yellow {
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.8);
+}
+
+.status-glow-red {
+    box-shadow: 0 0 8px rgba(248, 113, 113, 0.8);
+}
+
+/* Card hover effect */
+.card-hover {
+    transition: border-color 150ms cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover:hover {
+    border-color: #3f3f46;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Button hover lift */
+.btn-lift {
+    transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+.btn-lift:active {
+    transform: translateY(0);
+}
+
+/* Fade in animation for staggered children */
+.fade-in-stagger>* {
+    opacity: 0;
+    animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.fade-in-stagger>*:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+.fade-in-stagger>*:nth-child(2) {
+    animation-delay: 50ms;
+}
+
+.fade-in-stagger>*:nth-child(3) {
+    animation-delay: 100ms;
+}
+
+.fade-in-stagger>*:nth-child(4) {
+    animation-delay: 150ms;
+}
+
+.fade-in-stagger>*:nth-child(5) {
+    animation-delay: 200ms;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
