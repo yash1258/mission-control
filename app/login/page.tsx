@@ -1,8 +1,32 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock, Loader2, Eye, EyeOff, Cpu, Zap, Terminal, Sparkles } from 'lucide-react';
+
+// Pre-generate particle positions to avoid hydration mismatch
+const PARTICLE_POSITIONS = [
+    { left: 35.63, top: 75.17, delay: 1.48, duration: 6.80 },
+    { left: 48.83, top: 15.69, delay: 3.37, duration: 6.69 },
+    { left: 13.92, top: 34.44, delay: 2.64, duration: 3.83 },
+    { left: 51.45, top: 92.09, delay: 2.37, duration: 3.66 },
+    { left: 18.26, top: 22.95, delay: 1.08, duration: 4.18 },
+    { left: 27.93, top: 90.04, delay: 1.64, duration: 6.69 },
+    { left: 90.46, top: 86.40, delay: 2.99, duration: 5.92 },
+    { left: 92.11, top: 54.41, delay: 2.57, duration: 4.77 },
+    { left: 5.31, top: 97.50, delay: 3.73, duration: 4.31 },
+    { left: 87.81, top: 65.55, delay: 0.50, duration: 3.07 },
+    { left: 26.98, top: 25.28, delay: 4.72, duration: 5.41 },
+    { left: 52.41, top: 27.80, delay: 3.31, duration: 6.96 },
+    { left: 71.03, top: 66.08, delay: 2.52, duration: 5.75 },
+    { left: 29.26, top: 65.83, delay: 2.89, duration: 4.01 },
+    { left: 39.19, top: 32.53, delay: 2.40, duration: 5.31 },
+    { left: 98.24, top: 70.48, delay: 1.76, duration: 4.94 },
+    { left: 0.19, top: 73.34, delay: 1.82, duration: 5.95 },
+    { left: 45.85, top: 92.16, delay: 1.48, duration: 6.72 },
+    { left: 82.95, top: 76.42, delay: 4.86, duration: 4.63 },
+    { left: 46.11, top: 98.90, delay: 3.05, duration: 6.23 },
+];
 
 export default function LoginPage() {
     const router = useRouter();
@@ -57,15 +81,15 @@ export default function LoginPage() {
 
                 {/* Floating particles */}
                 <div className="absolute inset-0 overflow-hidden">
-                    {[...Array(20)].map((_, i) => (
+                    {PARTICLE_POSITIONS.map((pos, i) => (
                         <div
                             key={i}
                             className="absolute w-1 h-1 bg-accent-purple/40 rounded-full float"
                             style={{
-                                left: `${Math.random() * 100}%`,
-                                top: `${Math.random() * 100}%`,
-                                animationDelay: `${Math.random() * 5}s`,
-                                animationDuration: `${3 + Math.random() * 4}s`,
+                                left: `${pos.left}%`,
+                                top: `${pos.top}%`,
+                                animationDelay: `${pos.delay}s`,
+                                animationDuration: `${pos.duration}s`,
                             }}
                         />
                     ))}

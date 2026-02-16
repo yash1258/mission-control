@@ -96,13 +96,8 @@ Theme preference is persisted in localStorage and respects system preference on 
 |------------|---------|---------|
 | Next.js | 16.x | React framework with App Router |
 | TypeScript | 5.x | Type safety |
-<<<<<<< HEAD
 | TailwindCSS | 3.4.x | Styling with CSS variables for theming |
 | Lucide React | 0.469.x | Icons |
-=======
-| TailwindCSS | 4.x | Styling with theme variables |
-| Lucide React | 0.563.x | Icons |
->>>>>>> 2a5be024f80bfe0a6a6a93c1c90c718ba3fb362a
 
 ## Project Structure
 
