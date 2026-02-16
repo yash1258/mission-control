@@ -31,13 +31,22 @@ MISSION_CONTROL_PASSWORD=your-secure-password
 - Login page with password field
 - Logout button in header
 
+## Theme Support
+
+The dashboard supports both dark and light modes:
+
+- **Dark Mode** (default): Deep blacks with purple accents
+- **Light Mode**: Clean whites with vibrant accents
+
+Theme preference is persisted in localStorage and respects system preference on first load.
+
 ## Tech Stack
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
 | Next.js | 15.x | React framework with App Router |
 | TypeScript | 5.x | Type safety |
-| TailwindCSS | 3.4.x | Styling |
+| TailwindCSS | 3.4.x | Styling with CSS variables for theming |
 | Lucide React | 0.469.x | Icons |
 
 ## Project Structure
@@ -45,11 +54,11 @@ MISSION_CONTROL_PASSWORD=your-secure-password
 ```
 mission-control/
 ├── app/                          # Next.js App Router
-│   ├── layout.tsx                # Root layout with dark theme
+│   ├── layout.tsx                # Root layout with ThemeProvider
 │   ├── page.tsx                  # Main dashboard page (client component)
-│   ├── globals.css               # Global styles, animations, scrollbar
+│   ├── globals.css               # Global styles, animations, theme variables
 │   ├── login/
-│   │   └── page.tsx              # Login page
+│   │   └── page.tsx              # Login page with animated background
 │   └── api/                      # API Routes
 │       ├── system-status/
 │       │   └── route.ts          # GET: Gateway, QMD, sessions status
@@ -67,39 +76,26 @@ mission-control/
 │           └── check/route.ts    # GET: Check auth status
 │
 ├── components/                   # React Components
-│   ├── Header.tsx                # Title, subtitle, refresh, logout
+│   ├── Header.tsx                # Title, subtitle, refresh, logout, theme toggle
 │   ├── StatusCard.tsx            # Reusable status card with icon
 │   ├── RunningAgents.tsx         # Active agents list panel
 │   ├── CronResults.tsx           # Recent cron runs panel
 │   ├── RecentErrors.tsx          # Error log panel
-│   └── QuickActions.tsx          # Action buttons grid
+│   ├── QuickActions.tsx          # Action buttons grid
+│   └── ThemeProvider.tsx         # Theme context wrapper
 │
 ├── lib/                          # Utilities
 │   ├── types.ts                  # TypeScript interfaces
 │   ├── cli.ts                    # CLI execution & output parsing
-│   └── auth.ts                   # Authentication utilities
+│   ├── auth.ts                   # Authentication utilities
+│   └── theme.tsx                 # Theme context and hook
 │
 ├── middleware.ts                 # Route protection middleware
 ├── plans/                        # Architecture documentation
 │   └── mission-control-architecture.md
 │
 ├── package.json                  # Dependencies
-├── tailwind.config.ts            # Tailwind configuration
-├── tsconfig.json                 # TypeScript configuration
-├── next.config.ts                # Next.js configuration
-├── postcss.config.mjs            # PostCSS configuration
-└── next-env.d.ts                 # Next.js type declarations
-```
-│
-├── lib/                          # Utilities
-│   ├── types.ts                  # TypeScript interfaces
-│   └── cli.ts                    # CLI execution & output parsing
-│
-├── plans/                        # Architecture documentation
-│   └── mission-control-architecture.md
-│
-├── package.json                  # Dependencies
-├── tailwind.config.ts            # Tailwind configuration
+├── tailwind.config.ts            # Tailwind configuration with CSS variables
 ├── tsconfig.json                 # TypeScript configuration
 ├── next.config.ts                # Next.js configuration
 ├── postcss.config.mjs            # PostCSS configuration
@@ -284,10 +280,12 @@ export function parseGatewayStatus(result: CLIResult): GatewayStatus {
 ### Components
 
 #### Header (`components/Header.tsx`)
-- Title with heart emoji
+- Title with heart emoji (🖤 dark / 💜 light)
 - Subtitle with user's name
 - Last updated timestamp with pulse indicator
 - Refresh button with loading spinner
+- Theme toggle button (Sun/Moon icons)
+- Logout button
 
 #### StatusCard (`components/StatusCard.tsx`)
 - Icon + title row
@@ -324,26 +322,20 @@ export function parseGatewayStatus(result: CLIResult): GatewayStatus {
 
 ### Colors
 
+The dashboard uses CSS variables for theme support:
+
 ```css
-/* Base */
---bg-base: #09090b          /* Deepest background */
---bg-elevated: #18181b      /* Cards, panels */
---bg-surface: #27272a       /* Hover states */
+/* Dark mode */
+--base: #09090b;
+--base-elevated: #18181b;
+--content-primary: #fafafa;
+--status-online: #22c55e;
 
-/* Text */
---text-primary: #fafafa     /* Headlines */
---text-secondary: #a1a1aa   /* Body text */
---text-muted: #71717a       /* Timestamps */
-
-/* Status */
---status-online: #4ade80    /* Green */
---status-warning: #fbbf24   /* Amber */
---status-error: #f87171     /* Red */
-
-/* Accent */
---accent-purple: #a78bfa    /* Primary accent */
---accent-cyan: #22d3ee      /* Secondary */
---accent-pink: #f472b6      /* Tertiary */
+/* Light mode */
+--base: #fafafa;
+--base-elevated: #ffffff;
+--content-primary: #18181b;
+--status-online: #16a34a;
 ```
 
 ### Typography
@@ -358,6 +350,7 @@ export function parseGatewayStatus(result: CLIResult): GatewayStatus {
 - **Hover lift:** -2px translateY
 - **Pulse:** 2s infinite for status indicators
 - **Spin:** 1s linear for loading spinners
+- **Float:** 3s ease-in-out for login page particles
 
 ## Running on Your Mac
 
@@ -398,6 +391,9 @@ Create a `.env.local` file for custom configuration:
 # CLI paths (if not in PATH)
 OPENCLAW_PATH=/usr/local/bin/openclaw
 QMD_PATH=/usr/local/bin/qmd
+
+# Custom password
+MISSION_CONTROL_PASSWORD=your-secure-password
 
 # Refresh interval (milliseconds)
 REFRESH_INTERVAL=30000
