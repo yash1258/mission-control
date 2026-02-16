@@ -64,17 +64,43 @@ export function parseGatewayStatus(result: CLIResult): GatewayStatus {
     } catch {
         // Fall back to text parsing
         const lines = result.stdout.split('\n');
-        const statusLine = lines.find(l => l.toLowerCase().includes('status'));
-        const uptimeLine = lines.find(l => l.toLowerCase().includes('uptime'));
-        const restartLine = lines.find(l => l.toLowerCase().includes('restart'));
 
-        const status = statusLine?.includes('online') ? 'online' :
-            statusLine?.includes('offline') ? 'offline' : 'unknown';
+        // Look for Runtime line (format: "Runtime: running (pid XXX, state active)")
+        const runtimeLine = lines.find(l => l.toLowerCase().includes('runtime:'));
+
+        if (runtimeLine) {
+            const status = runtimeLine.toLowerCase().includes('running') ? 'online' :
+                         runtimeLine.toLowerCase().includes('stopped') ? 'offline' : 'unknown';
+
+            // Extract PID from runtime line for uptime info
+            const pidMatch = runtimeLine.match(/pid\s+(\d+)/);
+            const pid = pidMatch?.[1] || 'N/A';
+
+            return {
+                status,
+                uptime: `PID: ${pid}`,
+                lastRestart: 'N/A',
+            };
+        }
+
+        // Fallback: look for status: line
+        const statusLine = lines.find(l => l.toLowerCase().includes('status:'));
+
+        if (statusLine) {
+            const status = statusLine.toLowerCase().includes('online') ? 'online' :
+                         statusLine.toLowerCase().includes('offline') ? 'offline' : 'unknown';
+
+            return {
+                status,
+                uptime: extractValue(statusLine) || 'N/A',
+                lastRestart: 'N/A',
+            };
+        }
 
         return {
-            status,
-            uptime: extractValue(uptimeLine) || 'N/A',
-            lastRestart: extractValue(restartLine) || 'N/A',
+            status: 'unknown',
+            uptime: 'N/A',
+            lastRestart: 'N/A',
         };
     }
 }
