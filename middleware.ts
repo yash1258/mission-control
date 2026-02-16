@@ -4,12 +4,12 @@ import type { NextRequest } from 'next/server';
 const AUTH_COOKIE_NAME = 'mission-control-auth';
 
 // Routes that don't require authentication
-const publicRoutes = ['/login', '/api/auth/login', '/api/auth/check'];
+const publicRoutes = ['/login', '/api/auth'];
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    // Allow public routes
+    // Allow public routes (including /api/auth/*)
     if (publicRoutes.some(route => pathname.startsWith(route))) {
         return NextResponse.next();
     }
@@ -18,12 +18,12 @@ export function middleware(request: NextRequest) {
     if (
         pathname.startsWith('/_next') ||
         pathname.startsWith('/favicon') ||
-        pathname.includes('.') // Static files
+        pathname.includes('.')
     ) {
         return NextResponse.next();
     }
 
-    // Check authentication
+    // Check authentication for protected routes
     const authCookie = request.cookies.get(AUTH_COOKIE_NAME);
 
     if (!authCookie || authCookie.value !== 'authenticated') {

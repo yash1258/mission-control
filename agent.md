@@ -1,6 +1,6 @@
 # Mission Control Dashboard
 
-A real-time system monitoring dashboard for OpenClaw AI agent framework. Built with Next.js 15, TypeScript, TailwindCSS, and Lucide React icons.
+A real-time system monitoring dashboard for OpenClaw AI agent framework. Built with Next.js 16, TypeScript, TailwindCSS, and Lucide React icons.
 
 ## Overview
 
@@ -11,12 +11,14 @@ Mission Control provides a centralized view of your OpenClaw system health, incl
 - Active session information
 - Running agents/sub-sessions
 - Recent error logs
+- Dark/light theme toggle
+- Password-protected access
 
 ## Authentication
 
-The dashboard is protected by simple password authentication. 
+The dashboard is protected by simple password authentication.
 
-**Default Password:** `mission-control-2024`
+**Default Password:** `renoa1258` (set via `MISSION_CONTROL_PASSWORD` environment variable)
 
 To change the password, set the `MISSION_CONTROL_PASSWORD` environment variable:
 
@@ -26,10 +28,58 @@ MISSION_CONTROL_PASSWORD=your-secure-password
 ```
 
 **Features:**
-- Cookie-based session (7 days)
-- Protected API routes
-- Login page with password field
+- Cookie-based session (7 days expiry)
+- Protected API routes (all `/api/*` except `/api/auth/*`)
+- Login page with password field and show/hide toggle
 - Logout button in header
+- Middleware protection using Next.js middleware
+
+## Theme System
+
+Full dark/light mode support with CSS variables and Tailwind class strategy.
+
+**Features:**
+- Toggle in header with Sun/Moon icons
+- Persists to `localStorage`
+- Detects system preference on first visit
+- Smooth transitions (`transition: background-color 0.3s`)
+- Grid background pattern in both themes
+- All colors use CSS variables for instant switching
+
+## Recent Updates
+
+### 2026-02-16
+
+**Authentication System:**
+- Added middleware (`middleware.ts`) for route protection
+- Login page (`app/login/page.tsx`) with animated UI
+- Authentication API routes (`/api/auth/login`, `/api/auth/logout`, `/api/auth/check`)
+- Cookie-based session management (7-day expiry)
+- Logout button in header
+
+**Theme System:**
+- Dark/light mode toggle (`lib/theme.tsx`, `components/ThemeProvider.tsx`)
+- CSS variables for all colors (theme-aware)
+- Smooth transitions between themes
+- Updated all components to use CSS variables
+- Login page with gradient orbs and floating particles
+
+**Bug Fixes:**
+- Fixed middleware to allow all `/api/auth/*` routes (was too restrictive)
+- Fixed gateway status parsing to handle "Runtime: running" output format
+- Updated CLI parsing logic for better error handling
+
+**Visual Improvements:**
+- Enhanced login page with animated gradient orbs
+- Added floating particle effects
+- Theme toggle button in header
+- Improved status cards with hover effects
+- Better responsive design
+
+**Deployment:**
+- Cloudflare tunnel setup via quick tunnels
+- URL: `https://girlfriend-kitchen-marker-rand.trycloudflare.com` (changes on each tunnel start)
+- Password: `renoa1258`
 
 ## Theme Support
 
@@ -44,10 +94,15 @@ Theme preference is persisted in localStorage and respects system preference on 
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| Next.js | 15.x | React framework with App Router |
+| Next.js | 16.x | React framework with App Router |
 | TypeScript | 5.x | Type safety |
+<<<<<<< HEAD
 | TailwindCSS | 3.4.x | Styling with CSS variables for theming |
 | Lucide React | 0.469.x | Icons |
+=======
+| TailwindCSS | 4.x | Styling with theme variables |
+| Lucide React | 0.563.x | Icons |
+>>>>>>> 2a5be024f80bfe0a6a6a93c1c90c718ba3fb362a
 
 ## Project Structure
 
@@ -446,7 +501,7 @@ npm run build
 
 1. Add action type to `lib/types.ts`:
 ```typescript
-export type ActionType = 
+export type ActionType =
   | 'restart-gateway'
   | 'run-news-scout'
   | 'your-new-action';  // Add here
